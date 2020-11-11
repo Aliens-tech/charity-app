@@ -56,7 +56,6 @@ class LoginAPIView(APIView):
 class LogoutAPIView(APIView):
 
     def post(self, request):
-
         if request.auth and request.user:
             Token.objects.get(user=request.user).delete()
             return Response(status=status.HTTP_200_OK)
