@@ -10,7 +10,7 @@ from .serializers import SignupUserSerializer
 
 class SignupAPIView(GenericAPIView):
     serializer_class = SignupUserSerializer
-
+    
     def post(self, request):
         user_serializer = SignupUserSerializer(data=request.data)
 
@@ -52,3 +52,13 @@ class LoginAPIView(APIView):
                 {"error": "invalid data"}, 
                 status=status.HTTP_404_NOT_FOUND
             )
+
+class LogoutAPIView(APIView):
+
+    def post(self, request):
+
+        if request.auth and request.user:
+            Token.objects.get(user=request.user).delete()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'you are not logged in'}, status=status.HTTP_400_BAD_REQUEST)
