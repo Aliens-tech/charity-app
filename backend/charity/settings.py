@@ -27,7 +27,7 @@ elif os.getenv("PRODUCTION", None):
 
     DEBUG = False
 
-    ALLOWED_HOSTS = ['charityy.herokuapp.com/']
+    ALLOWED_HOSTS = ['https://charityy.herokuapp.com/']
 
     import dj_database_url 
     prod_db  =  dj_database_url.config(conn_max_age=500)
