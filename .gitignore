@@ -133,3 +133,7 @@ dmypy.json
 
 # migration folder 
 migrations/
+
+# secret file 
+secrets.py
+.secrets.py
