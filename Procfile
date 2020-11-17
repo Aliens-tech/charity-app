@@ -1,1 +1,1 @@
-web: gunicorn charity.wsgi --log-file -
+web: gunicorn backend.charity.wsgi --log-file -
