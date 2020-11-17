@@ -25,7 +25,7 @@ elif os.getenv("PRODUCTION", None):
     
     SECRET_KEY = os.getenv("SECRET_KEY")
 
-    DEBUG = False
+    DEBUG = True
 
     ALLOWED_HOSTS = ['https://charityy.herokuapp.com/']
 
