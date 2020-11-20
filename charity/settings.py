@@ -70,7 +70,8 @@ INSTALLED_APPS = [
 
     # our apps
     'users',
-
+    'posts',
+    
     # 3rd party apps 
     'corsheaders',
     'rest_framework',
