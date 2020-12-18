@@ -1,12 +1,123 @@
 import 'package:flutter/material.dart';
+import 'package:opinionat/APIs/UserServices.dart';
+import 'package:opinionat/components/already_have_acc_check.dart';
+import 'package:opinionat/components/rounded_btn.dart';
+import 'package:opinionat/components/rounded_input_field.dart';
+import 'package:opinionat/constants.dart';
+import 'package:opinionat/models/user.dart';
+import 'package:opinionat/screens/Home.dart';
+import 'package:opinionat/screens/SignUP/signUp_screen.dart';
 
-import 'components/body.dart';
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
 
-class LoginScreen extends StatelessWidget {
+class _LoginScreenState extends  State<LoginScreen> {
+  final _scaffoldKey = GlobalKey <ScaffoldState>();
+  var _formKey = GlobalKey <FormState>();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  User _user = User();
+  UserServices _userServices = UserServices();
+
+  showLoader() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Dialog(
+            child: new Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator(backgroundColor: kPrimaryColor, valueColor: new AlwaysStoppedAnimation<Color>(kPrimaryLightColor))
+                  ),
+                  Text("Loading"),
+                ])
+        )
+    );
+  }
+
+  void validateLogin(){
+    if (_formKey.currentState.validate()) {
+      showLoader();
+      _user.email = _emailController.text;
+      _user.password = _passwordController.text;
+      _userServices.login(_user).then((response) {
+        if(response.statusCode == 201){
+          _emailController.clear();
+          _passwordController.clear();
+          Navigator.of(context).pop();
+          Navigator.push(context, MaterialPageRoute(builder: (context) {return Home();}));
+        }else{
+          print("error:"+response.body);
+          print(response.statusCode);
+          _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(response.body)));
+          Navigator.of(context).pop();
+        }
+        return;
+      });
+    }
+    _formKey.currentState.save();
+  }
+
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Body(),
+      key: _scaffoldKey,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "LOGIN",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: kPrimaryColor,
+                      fontSize: 18),
+                ),
+                SizedBox(height: size.height * 0.03),
+                Image.asset("assets/images/login.jpg", height: size.width * 0.7),
+                SizedBox(height: size.height * 0.03),
+                RoundedInputField(
+                    controller: _emailController, icon: Icons.mail,
+                    hintText: "E-mail", type: TextInputType.emailAddress,
+                    errorMsg: 'Enter a valid email'
+                ),
+                RoundedInputField(
+                    controller: _passwordController, icon: Icons.lock,
+                    hintText: "Password", suffixIcon: Icons.visibility, isPassword: true,
+                    errorMsg: 'Enter a valid password'
+                ),
+
+                SizedBox(height: size.height * 0.03),
+                RoundedButton(
+                  text: "LOGIN",
+                  press: validateLogin,
+                ),
+                AlreadyHaveAccountCheck(
+                  press: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return SignUpScreen();
+                        },
+                      ),
+                    );
+                  }
+                )
+              ]
+            ),
+          ),
+        )
+      )
     );
   }
 }
