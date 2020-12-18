@@ -8,7 +8,13 @@ class Category(models.Model):
         return self.name
         
 class Post(models.Model):
+    POST_STATUS_TYPES = (
+        ('O', 'Offer'),
+        ('R', 'Request')
+    )
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
+    post_type = models.CharField(choices=POST_STATUS_TYPES, max_length=1, default='O')
     catgories = models.ManyToManyField(Category)
     title = models.CharField(max_length=100)
     description = models.TextField()

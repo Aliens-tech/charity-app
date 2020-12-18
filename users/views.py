@@ -61,3 +61,4 @@ class LogoutAPIView(APIView):
             return Response(status=status.HTTP_200_OK)
         else:
             return Response({'error': 'you are not logged in'}, status=status.HTTP_400_BAD_REQUEST)
+
