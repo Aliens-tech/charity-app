@@ -3,6 +3,10 @@ from rest_framework import serializers
 from .models import Post, Category
 
 class PostSerializer(serializers.ModelSerializer):
+    
+    catgories = serializers.StringRelatedField(many=True)
+    user = serializers.StringRelatedField()
+    
     class Meta:
         model = Post
         fields = "__all__" 
