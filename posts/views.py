@@ -16,7 +16,7 @@ class PostViewSet(viewsets.ModelViewSet):
             permission_classes = (permissions.AllowAny,)
 
         elif self.action == 'create':
-            permission_classes = (permissions.IsAuthenticated,) 
+            permission_classes = (permissions.IsAuthenticated,)
 
         elif self.action == 'update' or self.action == 'destroy' \
             or self.action == 'partial_update':
