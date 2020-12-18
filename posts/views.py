@@ -1,15 +1,13 @@
-
-from rest_framework import viewsets
-from rest_framework import permissions
+from rest_framework import viewsets, permissions, status
 from rest_framework.generics import ListAPIView
+from rest_framework.response import Response
 
 from .models import Post, Category
-from .serializers import PostSerializer
+from .serializers import PostSerializer, PostDetailsSerializer
 from .permissions import IsOwner
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
-    serializer_class = PostSerializer
 
     def get_permissions(self):
         if self.action == 'list' or self.action =='retrieve':
@@ -26,6 +24,24 @@ class PostViewSet(viewsets.ModelViewSet):
             permission_classes = (permissions.IsAdminUser,)
         
         return [permission() for permission in permission_classes]
+
+    def get_serializer_class(self):
+        
+        if self.action == 'list' or self.action == 'retrieve':
+            return PostSerializer
+        else:
+            return PostDetailsSerializer
+    
+    def create(self, request):
+        
+        serializer = PostDetailsSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class PostsOffersListAPI(ListAPIView):
     queryset = Post.objects.filter(post_type='O')
