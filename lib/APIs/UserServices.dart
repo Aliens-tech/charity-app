@@ -5,6 +5,7 @@ import 'package:opinionat/models/user.dart';
 
 
 class UserServices{
+
   Future<dynamic> signUp(User user) async{
     String body = json.encode(user);
     Map<String, String> headers = {"Content-Type": "application/json"};
@@ -16,6 +17,12 @@ class UserServices{
     String body = json.encode(user);
     Map<String, String> headers = {"Content-Type": "application/json"};
     var response = await http.post(BASE_URL+'/users/login/', body: body, headers: headers);
+    return response;
+  }
+
+  Future<dynamic> logout(String token) async{
+    Map<String, String> headers = {"Content-Type": "application/json", "Authorization": "Token "+ token};
+    var response = await http.post(BASE_URL+'/users/logout/', headers: headers);
     return response;
   }
 }
