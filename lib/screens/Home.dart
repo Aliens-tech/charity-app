@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:opinionat/APIs/PostsServices.dart';
@@ -88,15 +89,50 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-            child: Column(
-      children: [
-        RaisedButton(
-          child: Text("Logout", style: TextStyle(color: Colors.white)),
-          color: kPrimaryColor,
-          onPressed: logoutConfirmation,
-        ),
-      ],
-    )));
+      backgroundColor: kPrimaryColor,
+      bottomNavigationBar: CurvedNavigationBar(
+        index: 0,
+        animationDuration: Duration(milliseconds: 300),
+        color:Colors.white,
+        backgroundColor:kPrimaryColor,
+        buttonBackgroundColor:Colors.white,
+        items: <Widget>[
+          Icon(
+            Icons.home,
+            size: 20,
+            color: Colors.black,
+          ),
+          Icon(
+            Icons.account_circle,
+            size: 20,
+            color: Colors.black,
+          ),
+          Icon(
+            Icons.settings,
+            size: 20,
+            color: Colors.black,
+          ),
+          Icon(
+            Icons.logout,
+            size: 20,
+            color: Colors.black,
+          ),
+        ],
+        onTap: (index) {
+          // we will navigate to any screen by check the index
+
+        },
+      ),
+      body: SafeArea(
+
+        child: Column(
+          children: [
+            RaisedButton(
+              child: Text("Logout", style: TextStyle(color: Colors.white)),
+              color: Colors.black,
+              onPressed: logoutConfirmation,
+            ),
+          ],
+        ),),);
   }
 }
