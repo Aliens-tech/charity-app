@@ -1,4 +1,4 @@
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
 from rest_framework.views import APIView
@@ -6,11 +6,13 @@ from rest_framework.authtoken.models import Token
 
 from django.contrib.auth import authenticate
 
-from .serializers import SignupUserSerializer
+from .serializers import SignupUserSerializer, UserDataSerializer
 
 class SignupAPIView(GenericAPIView):
     serializer_class = SignupUserSerializer
-    
+
+    permission_classes = (permissions.AllowAny,)
+
     def post(self, request):
         user_serializer = SignupUserSerializer(data=request.data)
 
@@ -28,6 +30,7 @@ class SignupAPIView(GenericAPIView):
 
 
 class LoginAPIView(APIView):
+    permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
         
@@ -62,3 +65,7 @@ class LogoutAPIView(APIView):
         else:
             return Response({'error': 'you are not logged in'}, status=status.HTTP_400_BAD_REQUEST)
 
+class GetUserDataAPI(APIView):
+    def get(self, request):
+        user_serializer =  UserDataSerializer(request.user)
+        return Response(user_serializer.data, status=status.HTTP_200_OK)
