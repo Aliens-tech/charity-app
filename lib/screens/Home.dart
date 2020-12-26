@@ -8,6 +8,7 @@ import 'package:opinionat/APIs/UserServices.dart';
 import 'package:opinionat/constants.dart';
 import 'package:opinionat/models/post.dart';
 import 'package:opinionat/screens/Login/login_screen.dart';
+import 'package:opinionat/screens/Profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
@@ -102,10 +103,15 @@ class _HomeState extends State<Home> {
             size: 20,
             color: Colors.black,
           ),
-          Icon(
-            Icons.account_circle,
-            size: 20,
-            color: Colors.black,
+          InkWell(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) {return Profile();}));
+            },
+            child: Icon(
+              Icons.account_circle,
+              size: 20,
+              color: Colors.black,
+            ),
           ),
           Icon(
             Icons.settings,
