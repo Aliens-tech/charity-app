@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     'users',
     'posts',
     'votes',
+    'comments',
     
     # 3rd party apps 
     'corsheaders',

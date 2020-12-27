@@ -20,6 +20,8 @@ urlpatterns = [
     path('api/users/', include('users.urls', namespace='users')),
     path('api/posts/', include('posts.urls', namespace='posts')),
     path('api/votes/', include('votes.urls', namespace='votes')),
-    
+    path('api/comments/', include('comments.comments_urls', namespace='comments')),
+    path('api/replies/', include('comments.replies_urls', namespace='comments')),
+
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
