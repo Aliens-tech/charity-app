@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:opinionat/APIs/UserServices.dart';
+import 'package:opinionat/components/BottomNavigationBar.dart';
 import 'package:opinionat/components/already_have_acc_check.dart';
 import 'package:opinionat/components/rounded_btn.dart';
 import 'package:opinionat/components/rounded_input_field.dart';
@@ -56,7 +57,7 @@ class _LoginScreenState extends  State<LoginScreen> {
           _emailController.clear();
           _passwordController.clear();
           Navigator.of(context).pop();
-          Navigator.push(context, MaterialPageRoute(builder: (context) {return Home();}));
+          Navigator.push(context, MaterialPageRoute(builder: (context) {return BottomNav();}));
         }else{
           print("error:"+response.body);
           print(response.statusCode);

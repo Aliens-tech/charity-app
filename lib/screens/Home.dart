@@ -90,45 +90,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kPrimaryColor,
-      bottomNavigationBar: CurvedNavigationBar(
-        index: 0,
-        animationDuration: Duration(milliseconds: 300),
-        color:Colors.white,
-        backgroundColor:kPrimaryColor,
-        buttonBackgroundColor:Colors.white,
-        items: <Widget>[
-          Icon(
-            Icons.home,
-            size: 20,
-            color: Colors.black,
-          ),
-          InkWell(
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) {return Profile();}));
-            },
-            child: Icon(
-              Icons.account_circle,
-              size: 20,
-              color: Colors.black,
-            ),
-          ),
-          Icon(
-            Icons.settings,
-            size: 20,
-            color: Colors.black,
-          ),
-          Icon(
-            Icons.logout,
-            size: 20,
-            color: Colors.black,
-          ),
-        ],
-        onTap: (index) {
-          // we will navigate to any screen by check the index
-
-        },
-      ),
+      backgroundColor: kPrimaryLightColor,
       body: SafeArea(
 
         child: Column(
@@ -139,6 +101,8 @@ class _HomeState extends State<Home> {
               onPressed: logoutConfirmation,
             ),
           ],
-        ),),);
+        )
+      )
+    );
   }
 }

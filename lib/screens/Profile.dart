@@ -6,17 +6,14 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kPrimaryLightColor,
         body: SafeArea(
           child: Column(
 
             children: [
               Container(
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: NetworkImage("https://cdn.hipwallpaper.com/i/96/67/pNI9B6.jpg"),
-                        fit: BoxFit.cover
-                    )
-                ),
+                color: kPrimaryColor,
+
                 child: Container(
                   width: double.infinity,
                   height: 200,
