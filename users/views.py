@@ -8,6 +8,8 @@ from django.contrib.auth import authenticate
 
 from .serializers import SignupUserSerializer, UserDataSerializer
 
+from .models import User, StarUser
+
 class SignupAPIView(GenericAPIView):
     serializer_class = SignupUserSerializer
 
@@ -27,7 +29,6 @@ class SignupAPIView(GenericAPIView):
                 {'error': user_serializer.errors}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
-
 
 class LoginAPIView(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -69,3 +70,45 @@ class GetUserDataAPI(APIView):
     def get(self, request):
         user_serializer =  UserDataSerializer(request.user)
         return Response(user_serializer.data, status=status.HTTP_200_OK)
+
+class ToggleStarUser(APIView):
+    def post(self, request, user_id):
+        # get user by id
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response(
+                {'error': 'user is not exist'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        # check if the current user starts user
+        star_user_object = StarUser.objects.filter(
+            from_user=request.user,
+            to_user=user).first()
+        
+        # staring object exists so will delete the star from user 
+        if star_user_object:
+            
+            # delete the object 
+            star_user_object.delete()
+
+            # return response 
+            return Response(
+                {"data": 'star removed'},
+                status=status.HTTP_204_NO_CONTENT
+            )
+
+        # staring object does not exist, so will add the star to the user
+        else:
+            # create star to the user 
+            new_star_object = StarUser.objects.create(
+                from_user=request.user,
+                to_user=user
+            )
+
+            # return response 
+            return Response(
+                {'data': 'star added'},
+                status=status.HTTP_201_CREATED
+            )

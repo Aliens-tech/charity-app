@@ -19,6 +19,10 @@ class SignupUserSerializer(serializers.ModelSerializer):
         return user
 
 class UserDataSerializer(serializers.ModelSerializer):
+    stars = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ('username', 'email', 'phone')
+        fields = ('id', 'username', 'email', 'phone', 'stars')
+    
+    def get_stars(self, obj):
+        return obj.stars.all().count()

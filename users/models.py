@@ -7,3 +7,10 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+class StarUser(models.Model):
+    from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='stars_user')
+    to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='stars')
+
+    def __str__(self):
+        return self.from_user.username + ' stars ' + self.to_user.username
