@@ -8,7 +8,7 @@ import 'package:opinionat/APIs/UserServices.dart';
 import 'package:opinionat/constants.dart';
 import 'package:opinionat/models/post.dart';
 import 'package:opinionat/screens/Login/login_screen.dart';
-import 'package:opinionat/screens/Profile.dart';
+import 'package:opinionat/screens/ProfileScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
@@ -26,18 +26,22 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     getToken().then((val) {
-      setState(() {
+
+     /* _requestServices.getRequests().then((value) {
+        Map<dynamic,dynamic> data =jsonDecode(value.body);
+
+        print(data.values.first);
+      });*/
+    /*  setState(() {
         token = val;
         post = Post("O", "samir", "si7a", [1]);
         _requestServices.CreatePost(token, post).then((value) {
           print(jsonDecode(value.body));
         });
-      });
+      });*/
     });
 
-    _requestServices.getRequests().then((value) {
-      print(jsonDecode(value.body));
-    });
+
   }
 
   dynamic getToken() async {

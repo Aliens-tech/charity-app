@@ -5,8 +5,8 @@ class Post {
   String description;
   String created_at;
   String updated_at;
-  int user;
-  List<int> categories;
+  String user;
+  List<dynamic> categories;
 
   Post(this.postType, this.title, this.description, this.categories);
 
