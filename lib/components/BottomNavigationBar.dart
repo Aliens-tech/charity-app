@@ -3,17 +3,12 @@ import 'dart:convert';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:opinionat/APIs/PostsServices.dart';
-import 'package:opinionat/APIs/UserServices.dart';
 import 'package:opinionat/constants.dart';
-import 'package:opinionat/models/post.dart';
 import 'package:opinionat/screens/Home.dart';
-import 'package:opinionat/screens/Login/login_screen.dart';
 import 'package:opinionat/screens/Offers.dart';
 import 'package:opinionat/screens/Profile.dart';
 import 'package:opinionat/screens/RequestsPage.dart';
 import 'package:opinionat/screens/Settings.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class BottomNav extends StatefulWidget {
   @override
