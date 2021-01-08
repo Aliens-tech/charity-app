@@ -14,13 +14,13 @@ class PostImageSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     
-    catgories = serializers.StringRelatedField(many=True)
+    categories = serializers.StringRelatedField(many=True)
     user = serializers.StringRelatedField()
     images = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
-        fields = ("id", "catgories", "user", "images", "title", "description") 
+        fields = ("id", "categories", "user", "images", "title", "description", 'city', 'region') 
 
     def get_images(self, obj):
         serializer = PostImageSerializer(obj.images.all(), many=True)
