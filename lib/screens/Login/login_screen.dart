@@ -8,7 +8,7 @@ import 'package:opinionat/components/rounded_btn.dart';
 import 'package:opinionat/components/rounded_input_field.dart';
 import 'package:opinionat/constants.dart';
 import 'package:opinionat/models/user.dart';
-import 'package:opinionat/screens/Home.dart';
+import 'package:opinionat/screens/HomeScreen.dart';
 import 'package:opinionat/screens/SignUP/signUp_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
