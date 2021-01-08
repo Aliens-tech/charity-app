@@ -2,7 +2,7 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 
-from .models import Post, Category
+from .models import Post, Category, PostImage
 from .serializers import PostSerializer, PostDetailsSerializer
 from .permissions import IsOwner
 
@@ -35,13 +35,18 @@ class PostViewSet(viewsets.ModelViewSet):
     def create(self, request):
         
         serializer = PostDetailsSerializer(data=request.data)
-
+        
         if serializer.is_valid():
-            serializer.save(user=request.user)
+            post = serializer.save(user=request.user)
+            images = dict((request.data).lists())['images']
+            for image in images:
+                PostImage.objects.create(
+                post=post,
+                img=image
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class PostsOffersListAPI(ListAPIView):
     queryset = Post.objects.filter(post_type='O')
