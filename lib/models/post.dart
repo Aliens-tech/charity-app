@@ -8,6 +8,7 @@ class Post {
   String user;
   List<dynamic> categories;
 
+
   Post(this.postType, this.title, this.description, this.categories);
 
   Map<String, dynamic> toJson() => {

@@ -26,11 +26,6 @@ class _OffersPageState extends State<OffersPage> {
     getToken().then((val) {
       setState(() {
         token = val;
-        _requestServices.getOffers(token).then((value) {
-          response = jsonDecode(value.body);
-          print(jsonDecode(value.body));
-          print(response.length);
-        });
       });
     });
   }
@@ -84,51 +79,63 @@ class _OffersPageState extends State<OffersPage> {
     return Container(
       child: Scaffold(
         backgroundColor: kPrimaryLightColor,
-        body: Column(children: <Widget>[
-          SafeArea(
-              child: FlatButton(
-                color: kPrimaryColor,
-                onPressed: () {
-                  createAlertDialog(context).then((value) =>   _requestServices.CreatePost(token, value).then((value) => print(jsonDecode(value.body))
-                  ));
-                },
-                child: Text(
-                  'Add Offer',
-                  style: TextStyle(color: Colors.white),
-                ),
-              )),
-          Expanded(
-            child: ListView.builder(
-              itemCount:8 /*response.length*/,
-              shrinkWrap: true,
-              itemBuilder: (BuildContext context, int index) => Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-                child: Card(
-                  elevation: 5.0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0.0),
-                  ),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding:
-                    EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                    child: Column(
-                      children: [
-                        Text(response[index]["user"]),
-                        Text(response[index]["title"]),
-                        Text(response[index]["description"]),
-                        Text(response[index]["created_at"]),
-                        Text(response[index]["catgories"].toString()),
-                      ],
+        body:FutureBuilder(
+          future: _requestServices.getOffers(token),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: Text('Loading...'),
+              );
+            }
+            else{
+              return Column(children: <Widget>[
+                SafeArea(
+                    child: FlatButton(
+                      color: kPrimaryColor,
+                      onPressed: () {
+                        createAlertDialog(context).then((value) =>
+                            _requestServices.CreatePost(token, value)
+                                .then((value) => print(jsonDecode(value.body))));
+                      },
+                      child: Text(
+                        'Add Offer',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: snapshot.data.length,
+                    shrinkWrap: true,
+                    itemBuilder: (BuildContext context, int index) => Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+                      child: Card(
+                        elevation: 5.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0.0),
+                        ),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding:
+                          EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                          child: Column(
+                            children: [
+                              Text(snapshot.data[index].title??'title'),
+                              Text(snapshot.data[index].description??'des'),
+
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-          ),
-        ]),
+              ]);
+            }
+          },
+        )
       ),
     );
   }
 }
+
