@@ -29,4 +29,4 @@ class PostSerializer(serializers.ModelSerializer):
 class PostDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        exclude = ('user',)
+        exclude = ('user', 'categories')

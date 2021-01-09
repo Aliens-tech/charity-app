@@ -39,11 +39,24 @@ class PostViewSet(viewsets.ModelViewSet):
                 {'error': 'there is no images, please put images to the post'},
                 status=status.HTTP_400_BAD_REQUEST
             )
+        
+        categories_objects = []
 
+        for category in request.data.get('categories'):
+            try:
+                get_id = int(category)
+                category_object = Category.objects.get(id=get_id)
+                categories_objects.append(category_object)
+            except:
+                pass
+        request.data.pop('categories')
         serializer = PostDetailsSerializer(data=request.data)
         
         if serializer.is_valid():
             post = serializer.save(user=request.user)
+            for category in categories_objects:
+                post.categories.add(category)
+
             images = dict((request.data).lists())['images']
             for image in images:
                 PostImage.objects.create(
