@@ -34,6 +34,12 @@ class PostViewSet(viewsets.ModelViewSet):
     
     def create(self, request):
         
+        if not request.data.get('images'):
+            return Response(
+                {'error': 'there is no images, please put images to the post'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         serializer = PostDetailsSerializer(data=request.data)
         
         if serializer.is_valid():
