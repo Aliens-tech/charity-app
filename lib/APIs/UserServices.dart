@@ -21,6 +21,7 @@ class UserServices {
   }
 
   Future<dynamic> logout(String token) async {
+    print(token);
     Map<String, String> headers = {
       "Content-Type": "application/json",
       "Authorization": "Token " + token
@@ -35,10 +36,14 @@ class UserServices {
       "Content-Type": "application/json",
       "Authorization": "Token " + token
     };
+    print(token);
     var data =
         await http.get(BASE_URL + '/users/get-user-data', headers: headers);
     var jsonData=json.decode(data.body);
     User user=User.profile(jsonData["username"],jsonData["stars"]);
+
+
+    print(user.username);
     return user;
 
   }

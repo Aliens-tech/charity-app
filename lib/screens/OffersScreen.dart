@@ -89,19 +89,6 @@ class _OffersPageState extends State<OffersPage> {
             }
             else{
               return Column(children: <Widget>[
-                SafeArea(
-                    child: FlatButton(
-                      color: kPrimaryColor,
-                      onPressed: () {
-                        createAlertDialog(context).then((value) =>
-                            _requestServices.CreatePost(token, value)
-                                .then((value) => print(jsonDecode(value.body))));
-                      },
-                      child: Text(
-                        'Add Offer',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    )),
                 Expanded(
                   child: ListView.builder(
                     itemCount: snapshot.data.length,

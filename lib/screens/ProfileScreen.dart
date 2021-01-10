@@ -14,10 +14,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   UserServices _userServices = UserServices();
   String token;
-  String username, bio;
+  String username, bio = 'OH';
   int stars;
-
-  dynamic response;
 
   @override
   void initState() {
@@ -25,28 +23,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     getToken().then((val) {
       setState(() {
         token = val;
-       /* _userServices.getProfileData(token).then((value) {
-          response = jsonDecode(value.body);
-          stars = response["stars"];
-          username = response["username"];
-          bio = 'ana gameed';
-          print(username);
-        });*/
-      });
-    });
-  }
-
-  void loadProfile() async {
-    getToken().then((val) {
-      setState(() {
-        token = val;
-        _userServices.getProfileData(token).then((value) {
-          response = jsonDecode(value.body);
-          stars = response["stars"];
-          username = response["username"];
-          bio = 'ana gameed';
-          print(username);
-        });
       });
     });
   }
@@ -58,6 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         backgroundColor: kPrimaryLightColor,
         body: FutureBuilder(
@@ -73,16 +50,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   children: [
                     Container(
-                      color: kPrimaryColor,
+                      color: Colors.transparent,
                       child: Container(
                         width: double.infinity,
-                        height: 200,
+                        height: 150,
                         child: Container(
                           alignment: Alignment(0.0, 2.5),
                           child: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=334&q=80"),
+                            child: Text(snapshot.data.username[0].toUpperCase(), style: TextStyle(fontSize: 60)),
                             radius: 60.0,
+                            backgroundColor: kPrimaryColor,
                           ),
                         ),
                       ),
@@ -91,7 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 60,
                     ),
                     Text(
-                      snapshot.data.username != null ? snapshot.data.username : 'Loading',
+                      snapshot.data.username,
                       style: TextStyle(
                           fontSize: 25.0,
                           color: Colors.blueGrey,
@@ -134,7 +111,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: Colors.yellow[800],
                                 ),
                                 Text(
-                                  snapshot.data.stars,
+                                  snapshot.data.stars.toString(),
                                   style: TextStyle(
                                       letterSpacing: 2.0,
                                       fontWeight: FontWeight.w400),

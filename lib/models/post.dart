@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:multi_image_picker/multi_image_picker.dart';
+
 class Post {
   int id;
   String postType;
@@ -6,20 +10,17 @@ class Post {
   String created_at;
   String updated_at;
   String user;
+  List<Asset> images;
   List<dynamic> categories;
 
 
-  Post(this.postType, this.title, this.description, this.categories);
+  Post(this.postType, this.title, this.description, this.categories, {this.images});
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
+  Map<String, String> toJson() => {
     'post_type': postType,
     'title': title,
     'description': description,
-    'created_at': created_at,
-    'updated_at': updated_at,
-    'user': user,
-    'catgories': categories
+    'categories': categories.toString(),
   };
 
 }

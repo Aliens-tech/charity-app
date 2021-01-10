@@ -3,7 +3,7 @@ class User {
   String email;
   String password;
   String phone;
-  String stars;
+  int stars;
 
 
   User.profile(this.username, this.stars);

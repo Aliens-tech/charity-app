@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:opinionat/APIs/UserServices.dart';
 import 'package:opinionat/constants.dart';
+import 'package:opinionat/screens/Login/login_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
 
@@ -9,11 +12,65 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool _dark;
-
+  UserServices _userServices = UserServices();
+  String token;
   @override
   void initState() {
     super.initState();
     _dark = false;
+    getToken().then((val) {
+      setState(() {
+        token = val;
+      });
+    });
+  }
+
+
+  dynamic getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("jwt");
+  }
+
+  void logoutConfirmation() {
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Logout"),
+      onPressed: () {
+        _userServices.logout(token).then((response) async {
+          if (response.statusCode == 200) {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+
+            prefs.clear();
+            Navigator.of(context).pop();
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return LoginScreen();
+            }));
+          }
+        });
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Confirm Logout"),
+      content: Text("Are you sure you want to logout?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   Brightness _getBrightness() {
@@ -164,6 +221,11 @@ class _SettingsPageState extends State<SettingsPage> {
                     value: true,
                     title: Text("Received App Updates"),
                     onChanged: null,
+                  ),
+                  RaisedButton(
+                    child: Text("Logout", style: TextStyle(color: Colors.white)),
+                    color: Colors.black,
+                    onPressed: logoutConfirmation,
                   ),
                   const SizedBox(height: 60.0),
                 ],
