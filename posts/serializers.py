@@ -18,6 +18,7 @@ class PostSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()
     images = serializers.SerializerMethodField()
     image_item = serializers.SerializerMethodField()
+    created_at = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
@@ -40,6 +41,9 @@ class PostSerializer(serializers.ModelSerializer):
     def get_images(self, obj):
         serializer = PostImageSerializer(obj.images.all(), many=True)
         return serializer.data
+
+    def get_created_at(self, obj):
+        return obj.created_at.strftime("%m/%d/%Y, %H:%M:%S")
 
 class PostDetailsSerializer(serializers.ModelSerializer):
     class Meta:
