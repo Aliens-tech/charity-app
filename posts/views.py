@@ -1,6 +1,7 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import Post, Category, PostImage
 from .serializers import (
@@ -79,13 +80,19 @@ class PostsReuqestsListAPI(ListAPIView):
     queryset = Post.objects.filter(post_type='R')
     serializer_class = PostSerializer
 
-class FilterByAlphapetical(ListAPIView):
-    queryset = Post.objects.order_by('title')
-    serializer_class = PostSerializer
+class FilterByAlphapetical(APIView):
+    def get(self, request):
+        post_type = request.query_params.get('post_type')
+        queryset = Post.objects.filter(post_type=post_type).order_by('title')
+        serializer = PostSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-class FilterByPrice(ListAPIView):
-    queryset = Post.objects.order_by('price')
-    serializer_class = PostSerializer
+class FilterByPrice(APIView):
+    def get(self, request):
+        post_type = request.query_params.get('post_type')
+        queryset = Post.objects.filter(post_type=post_type).order_by('price')
+        serializer = PostSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ListCategoriesAPI(ListAPIView):
     queryset = Category.objects.all()
