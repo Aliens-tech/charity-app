@@ -14,13 +14,19 @@ class PostImageSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     
-    categories = serializers.StringRelatedField(many=True)
+    categories = serializers.SerializerMethodField()
     user = serializers.StringRelatedField()
     images = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
         fields = ("id", "categories", "user", "images", "title", "description", 'city', 'region', 'created_at', 'price') 
+
+    def get_categories(self, obj):
+        post_categories = ''
+        for category in obj.categories.all():
+            post_categories +='#%s '%(category.name)
+        return post_categories
 
     def get_images(self, obj):
         serializer = PostImageSerializer(obj.images.all(), many=True)
