@@ -36,6 +36,12 @@ elif os.getenv("PRODUCTION", None):
         }
     }
 
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': os.getenv('CLOUD_NAME'),
+        'API_KEY': os.getenv('API_KEY'),
+        'API_SECRET': os.getenv('API_SECRET'),
+    }
+
     import dj_database_url 
     prod_db  =  dj_database_url.config(conn_max_age=500)
     DATABASES['default'].update(prod_db)
@@ -57,7 +63,11 @@ else:
         'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': secrets.CLOUD_NAME,
+        'API_KEY': secrets.API_KEY,
+        'API_SECRET': secrets.API_SECRET,
+    }
 # Application definition
 
 INSTALLED_APPS = [
@@ -79,6 +89,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'drf_yasg',
+    'cloudinary'
 ]
 
 MIDDLEWARE = [
@@ -174,3 +185,5 @@ STATICFILES_DIRS = (
 
 CORS_ALLOW_ALL_ORIGINS = True
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

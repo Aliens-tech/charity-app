@@ -3,7 +3,11 @@ from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 
 from .models import Post, Category, PostImage
-from .serializers import PostSerializer, PostDetailsSerializer
+from .serializers import (
+    PostSerializer, 
+    PostDetailsSerializer,
+    CategorySerializer
+)
 from .permissions import IsOwner
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -74,3 +78,7 @@ class PostsOffersListAPI(ListAPIView):
 class PostsReuqestsListAPI(ListAPIView):
     queryset = Post.objects.filter(post_type='R')
     serializer_class = PostSerializer
+
+class ListCategoriesAPI(ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
