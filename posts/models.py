@@ -25,7 +25,7 @@ class Post(models.Model):
     city = models.CharField(max_length=30, default="")
     region = models.CharField(max_length=30, default="")
     description = models.TextField()
-    price = models.IntegerField(default=0)
+    price = models.FloatField(default=0.0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
