@@ -20,7 +20,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ("id", "categories", "user", "images", "title", "description", 'city', 'region', 'created_at') 
+        fields = ("id", "categories", "user", "images", "title", "description", 'city', 'region', 'created_at', 'price') 
 
     def get_images(self, obj):
         serializer = PostImageSerializer(obj.images.all(), many=True)

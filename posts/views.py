@@ -79,6 +79,14 @@ class PostsReuqestsListAPI(ListAPIView):
     queryset = Post.objects.filter(post_type='R')
     serializer_class = PostSerializer
 
+class FilterByAlphapetical(ListAPIView):
+    queryset = Post.objects.order_by('title')
+    serializer_class = PostSerializer
+
+class FilterByPrice(ListAPIView):
+    queryset = Post.objects.order_by('price')
+    serializer_class = PostSerializer
+
 class ListCategoriesAPI(ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
