@@ -7,7 +7,8 @@ from .views import (
     PostsOffersListAPI,
     PostsReuqestsListAPI,
     FilterByPrice,
-    FilterByAlphapetical
+    FilterByAlphapetical,
+    SearchPostTitleAPI
 )
 
 app_name = 'posts'
@@ -20,6 +21,7 @@ urlpatterns = [
     path('requests/', PostsReuqestsListAPI.as_view(), name='requests-posts'),
     path('filter/price/', FilterByPrice.as_view(), name='filter-by-price'),
     path('filter/alpha/', FilterByAlphapetical.as_view(), name='filter-by-alpha'),
+    path('search/', SearchPostTitleAPI.as_view(), name='search-by-title'),
     
 ]
 

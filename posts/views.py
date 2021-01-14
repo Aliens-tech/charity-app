@@ -97,3 +97,21 @@ class FilterByPrice(APIView):
 class ListCategoriesAPI(ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+class SearchPostTitleAPI(APIView):
+    def post(self, request):
+
+        # check if there is not title
+        if not request.data.get('title'):
+            return Response(
+                {'error': 'please enter title you want to search for.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        searched_title = request.data.get('title')
+        posts = Post.objects.filter(title__icontains=searched_title)
+        serializer = PostSerializer(posts, many=True)
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
