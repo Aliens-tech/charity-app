@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PostsScreen extends StatefulWidget {
   static String id = 'PostsScreen';
+
   @override
   _PostsScreenState createState() => _PostsScreenState();
 }
@@ -23,6 +24,7 @@ class _PostsScreenState extends State<PostsScreen>
   String username, title, description, createdAt;
   List<dynamic> tags;
   List<dynamic> response;
+  Stream<List<Post>> stream;
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   bool isSearching = false;
@@ -35,13 +37,16 @@ class _PostsScreenState extends State<PostsScreen>
   double _fabHeight = 56.0;
   String filterType = "";
 
+
+
   @override
   void initState() {
     _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 200))
-          ..addListener(() {
-            setState(() {});
-          });
+    AnimationController(vsync: this, duration: Duration(milliseconds: 200))
+      ..addListener(() {
+        setState(() {
+        });
+      });
     _animationIcon =
         Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
     _buttonColor = ColorTween(begin: kPrimaryColor, end: Colors.red).animate(
@@ -53,6 +58,9 @@ class _PostsScreenState extends State<PostsScreen>
         CurvedAnimation(
             parent: _animationController,
             curve: Interval(0.0, 0.75, curve: _curve)));
+
+
+    stream=getData();
 
     getToken().then((val) {
       setState(() {
@@ -80,58 +88,6 @@ class _PostsScreenState extends State<PostsScreen>
     super.dispose();
   }
 
-  //widgets
-  Widget buttonFilterByAlpha() {
-    return Container(
-      child: FloatingActionButton(
-        heroTag: null,
-
-        onPressed: () async{
-
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            await prefs.setString('filterType', 'alpha');
-            setState(() {});
-
-        },
-        tooltip: "Filter by alphabetical",
-        child: Icon(Icons.text_fields),
-      ),
-    );
-  }
-
-  Widget buttonFilterByPrice() {
-    return Container(
-      child: FloatingActionButton(
-        heroTag: null,
-        onPressed: () async{
-
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            await prefs.setString('filterType', 'price');
-            setState(() {});
-            //Navigator.popAndPushNamed(context,PostsScreen.id);
-
-        },
-        tooltip: "Filter by price",
-        child: Icon(Icons.attach_money),
-      ),
-    );
-  }
-
-  Widget buttonToggle() {
-    return Container(
-      child: FloatingActionButton(
-        heroTag: null,
-        backgroundColor: _buttonColor.value,
-        onPressed: animate,
-        tooltip: "Toggle",
-        child: AnimatedIcon(
-          icon: AnimatedIcons.menu_close,
-          progress: _animationIcon,
-        ),
-      ),
-    );
-  }
-
   animate() {
     if (!isOpened)
       _animationController.forward();
@@ -155,9 +111,71 @@ class _PostsScreenState extends State<PostsScreen>
     return prefs.getString("screenName");
   }
 
+  Widget buttonToggle() {
+    return Container(
+      child: FloatingActionButton(
+        heroTag: null,
+        backgroundColor: _buttonColor.value,
+        onPressed: animate,
+        tooltip: "Toggle",
+        child: AnimatedIcon(
+          icon: AnimatedIcons.menu_close,
+          progress: _animationIcon,
+        ),
+      ),
+    );
+  }
+
+
+  //widgets
+  Widget buttonFilterByAlpha() {
+    return Container(
+      child: FloatingActionButton(
+        heroTag: null,
+        onPressed: () async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('filterType', 'alpha');
+          setState(() {
+            stream=getData();
+          });
+        },
+        tooltip: "Filter by alphabetical",
+        child: Icon(Icons.text_fields),
+      ),
+    );
+  }
+
+  Widget buttonFilterByPrice() {
+    return Container(
+      child: FloatingActionButton(
+        heroTag: null,
+        onPressed: () async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('filterType', 'price');
+          setState(() {
+            stream=getData();
+          });
+        },
+        tooltip: "Filter by price",
+        child: Icon(Icons.attach_money),
+      ),
+    );
+  }
+
+
+  Stream<List<Post>> getData() async* {
+    yield* Stream.periodic(Duration(seconds: 1), (_) {
+      return filterType == ""
+          ? _requestServices.getPosts(token, screenName)
+          : _requestServices.getFilteredPosts(token, screenName, filterType);
+    }).asyncMap((event) async => await event);
+  }
+
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery
+        .of(context)
+        .size;
     return Container(
       child: Scaffold(
           floatingActionButton: Column(
@@ -181,11 +199,11 @@ class _PostsScreenState extends State<PostsScreen>
             ],
           ),
           backgroundColor: kPrimaryLightColor,
-          body: FutureBuilder(
-            future: filterType == ""
-                ? _requestServices.getPosts(token, screenName)
-                : _requestServices.getFilteredPosts(
-                    token, screenName, filterType),
+          body: StreamBuilder(
+            stream: stream,
+            /*filterType == ""
+                ? _requestServices.getPosts(token, screenName).asStream()
+                : _requestServices.getFilteredPosts(token, screenName, filterType).asStream(),*/
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (!snapshot.hasData) {
                 return Center(
@@ -199,39 +217,39 @@ class _PostsScreenState extends State<PostsScreen>
                     title: !isSearching
                         ? Text('All $screenName')
                         : TextField(
-                            style: TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
-                                icon: Icon(
-                                  Icons.search,
-                                  color: Colors.white,
-                                ),
-                                hintText: 'Search a needed offer here..',
-                                hintStyle: TextStyle(color: Colors.white)),
+                      style: TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                          icon: Icon(
+                            Icons.search,
+                            color: Colors.white,
                           ),
+                          hintText: 'Search a needed offer here..',
+                          hintStyle: TextStyle(color: Colors.white)),
+                    ),
                     actions: <Widget>[
                       isSearching
                           ? IconButton(
-                              icon: Icon(
-                                Icons.cancel,
-                                color: Colors.white,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  this.isSearching = false;
-                                });
-                              },
-                            )
+                        icon: Icon(
+                          Icons.cancel,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            this.isSearching = false;
+                          });
+                        },
+                      )
                           : IconButton(
-                              icon: Icon(
-                                Icons.search,
-                                color: Colors.white,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  this.isSearching = true;
-                                });
-                              },
-                            ),
+                        icon: Icon(
+                          Icons.search,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            this.isSearching = true;
+                          });
+                        },
+                      ),
                     ],
                   ),
                   body: Column(children: <Widget>[
@@ -241,88 +259,89 @@ class _PostsScreenState extends State<PostsScreen>
                         shrinkWrap: true,
                         itemBuilder: (BuildContext context, int index) =>
                             Container(
-                          width: size.width,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 5),
-                          child: Card(
-                            elevation: 5.0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: Container(
                               width: size.width,
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 10.0),
-                              child: Row(
-                                mainAxisAlignment:
+                                  horizontal: 10.0, vertical: 5),
+                              child: Card(
+                                elevation: 5.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Container(
+                                  width: size.width,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 10.0),
+                                  child: Row(
+                                    mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Flexible(
-                                    child: Column(
-                                      crossAxisAlignment:
+                                    children: [
+                                      Flexible(
+                                        child: Column(
+                                          crossAxisAlignment:
                                           CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          snapshot.data[index].title,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18,
-                                              color: kPrimaryColor),
+                                          children: [
+                                            Text(
+                                              snapshot.data[index].title,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18,
+                                                  color: kPrimaryColor),
+                                            ),
+                                            SizedBox(
+                                              height: size.height * 0.01,
+                                            ),
+                                            Text(
+                                              snapshot.data[index].description,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            SizedBox(
+                                              height: size.height * 0.01,
+                                            ),
+                                            Text(
+                                              snapshot.data[index].created_at,
+                                              style: TextStyle(
+                                                  fontStyle: FontStyle.italic,
+                                                  color: Colors.green),
+                                            ),
+                                            SizedBox(
+                                              height: size.height * 0.01,
+                                            ),
+                                            Text(
+                                                snapshot.data[index]
+                                                    .responsed_categories,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14)),
+                                          ],
                                         ),
-                                        SizedBox(
-                                          height: size.height * 0.01,
-                                        ),
-                                        Text(
-                                          snapshot.data[index].description,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        SizedBox(
-                                          height: size.height * 0.01,
-                                        ),
-                                        Text(
-                                          snapshot.data[index].created_at,
-                                          style: TextStyle(
-                                              fontStyle: FontStyle.italic,
-                                              color: Colors.green),
-                                        ),
-                                        SizedBox(
-                                          height: size.height * 0.01,
-                                        ),
-                                        Text(
-                                            snapshot.data[index]
-                                                .responsed_categories,
+                                      ),
+                                      SizedBox(width: size.width * 0.1),
+                                      Column(
+                                        children: [
+                                          Image.network(
+                                            snapshot.data[index].image_item,
+                                            fit: BoxFit.cover,
+                                            width: size.width * 0.3,
+                                            height: size.height * 0.18,
+                                          ),
+                                          SizedBox(
+                                            height: size.height * 0.02,
+                                          ),
+                                          Text(
+                                            snapshot.data[index].price
+                                                .toString() +
+                                                " LE",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 14)),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(width: size.width * 0.1),
-                                  Column(
-                                    children: [
-                                      Image.network(
-                                        snapshot.data[index].image_item,
-                                        fit: BoxFit.cover,
-                                        width: size.width * 0.3,
-                                        height: size.height * 0.18,
-                                      ),
-                                      SizedBox(
-                                        height: size.height * 0.02,
-                                      ),
-                                      Text(
-                                        snapshot.data[index].price.toString() +
-                                            " LE",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: kPrimaryColor),
+                                                color: kPrimaryColor),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
-                        ),
                       ),
                     ),
                   ]),
