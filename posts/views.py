@@ -73,11 +73,11 @@ class PostViewSet(viewsets.ModelViewSet):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class PostsOffersListAPI(ListAPIView):
-    queryset = Post.objects.filter(post_type='O')
+    queryset = Post.objects.filter(post_type='O').order_by('created_at')
     serializer_class = PostSerializer
 
 class PostsReuqestsListAPI(ListAPIView):
-    queryset = Post.objects.filter(post_type='R')
+    queryset = Post.objects.filter(post_type='R').order_by('created_at')
     serializer_class = PostSerializer
 
 class FilterByAlphapetical(APIView):
