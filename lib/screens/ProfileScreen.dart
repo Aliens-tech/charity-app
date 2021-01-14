@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:opinionat/APIs/UserServices.dart';
@@ -194,10 +192,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               gradient: LinearGradient(
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
-                                  colors: [
+                                  /*colors: [
                                     kPrimaryColor,
                                     Colors.deepPurpleAccent[200]
-                                  ]),
+                                  ]*/),
                               borderRadius: BorderRadius.circular(30.0),
                             ),
                             child: Container(
@@ -226,10 +224,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               gradient: LinearGradient(
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
-                                  colors: [
+                                 /* colors: [
                                     kPrimaryColor,
                                     Colors.deepPurpleAccent[200]
-                                  ]),
+                                  ]*/),
                               borderRadius: BorderRadius.circular(80.0),
                             ),
                             child: Container(

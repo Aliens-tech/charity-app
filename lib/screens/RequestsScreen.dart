@@ -42,7 +42,7 @@ class _RequestsPageState extends State<RequestsPage> {
       child: Scaffold(
           backgroundColor: kPrimaryLightColor,
           body: FutureBuilder(
-            future: _requestServices.getRequests(token),
+            future: _requestServices.getPosts(token,"requests"),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (!snapshot.hasData) {
                 return Center(

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:opinionat/screens/OffersScreen.dart';
 import 'package:opinionat/screens/ProfileScreen.dart';
 import 'package:opinionat/screens/RequestsScreen.dart';
 import 'package:opinionat/screens/SettingsScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BottomNav extends StatefulWidget {
   @override
@@ -14,6 +17,7 @@ class BottomNav extends StatefulWidget {
 }
 
 class _BottomNavState extends State<BottomNav> {
+
   PageController _pageController = PageController();
   List<Widget> _screen = [
     RequestsPage(),
@@ -44,7 +48,9 @@ class _BottomNavState extends State<BottomNav> {
           Icon(Icons.account_circle, size: 25, color: Colors.white),
           Icon(Icons.settings, size: 25, color: Colors.white),
         ],
-        onTap: (index) {
+        onTap: (index) async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+         await prefs.setInt('screenName',index);
           _pageController.jumpToPage(index);
         },
       ),

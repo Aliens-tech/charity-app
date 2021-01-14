@@ -7,25 +7,31 @@ import 'package:opinionat/models/post.dart';
 
 class RequestServices {
 
-  Future<List<Post>> getRequests(String token) async {
+  Future<List<Post>> getPosts(String token,String post_type) async {
 
     Map<String, String> headers = {
       "Content-Type": "application/json",
       "Authorization": "Token " + token
     };
-    List<Post> requests = [];
+    List<Post> posts = [];
 
     var data =
-    await http.get(BASE_URL + '/posts/requests/', headers: headers);
+    await http.get(BASE_URL + '/posts/$post_type/', headers: headers);
     var jsonData = json.decode(data.body);
-    for (var r in jsonData) {
-      Post request = Post('R', r["title"], r["description"], r[1]);
-      requests.add(request);
+    for (var p in jsonData) {
+      Post post = Post.response('R', p["title"], p["description"], p["categories"],p["created_at"],p["price"],p["image_item"]);
+      posts.add(post);
     }
-    return requests;
+    return posts;
   }
 
-  Future<List<Post>>getOffers(String token) async {
+
+
+
+
+
+
+  Future<List<Post>>getOffersByPrice(String token) async {
 
     Map<String, String> headers = {
       "Content-Type": "application/json",
@@ -37,13 +43,31 @@ class RequestServices {
     await http.get(BASE_URL + '/posts/offers/', headers: headers);
     var jsonData = json.decode(data.body);
     for (var o in jsonData) {
-      Post request = Post('R', o["title"], o["description"], o[1]);
-      offers.add(request);
+      Post offer = Post.response('O', o["title"], o["description"], o["categories"],o["created_at"],o["price"],o["image_item"]);
+      offers.add(offer);
     }
     return offers;
 
-
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   Future<dynamic> createPost(String token, Post post) async {
     dynamic request =  http.MultipartRequest("POST", Uri.parse(BASE_URL + '/posts/'));
@@ -68,26 +92,7 @@ class RequestServices {
     var responseString = String.fromCharCodes(responseData);
     print("response "+responseString);
 
-    // http.MultipartFile.fromPath('images', post.images.toString(), contentType: MediaType('application', 'x-tar')).then((value) {
-    //   request.files.add(value);
-    // });
-    // request.send().then((response) {
-    //   print(response.statusCode);
-    //   if (response.statusCode == 200) {
-    //     print("Uploaded!");
-    //     return response;
-    //   }
-    // });
   }
 }
 
-// Future<dynamic> CreatePost(String token, Post post) async {
-//   String body = json.encode(post);
-//   Map<String, String> headers = {
-//     "Content-Type": "application/json",
-//     "Authorization": "Token $token"
-//   };
-//   var response =
-//   await http.post(BASE_URL + '/posts/', body: body, headers: headers);
-//   return response;
-// }
+

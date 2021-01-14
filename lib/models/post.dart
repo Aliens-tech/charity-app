@@ -4,6 +4,7 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 
 class Post {
   int id;
+  double price;
   String postType;
   String title;
   String description;
@@ -11,16 +12,16 @@ class Post {
   String updated_at;
   String user;
   List<Asset> images;
-  List<dynamic> categories;
+  String image_item;
+  List<int> requested_categories;
+  String responsed_categories;
 
 
-  Post(this.postType, this.title, this.description, this.categories, {this.images});
+  Post(this.postType, this.title, this.description,this.requested_categories,{this.images});
 
-  Map<String, String> toJson() => {
-    'post_type': postType,
-    'title': title,
-    'description': description,
-    'categories': categories.toString(),
-  };
+  Post.request(this.postType, this.title, this.description,this.requested_categories,this.created_at,this.price,{this.images});
+
+  Post.response(this.postType, this.title, this.description,this.responsed_categories,this.created_at,this.price,this.image_item);
+
 
 }
