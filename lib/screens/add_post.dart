@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AddPost extends StatefulWidget {
   final String postType;
+
   AddPost({Key key, this.postType}) : super(key: key);
 
   @override
@@ -25,7 +26,7 @@ class _AddPostState extends State<AddPost> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   List<Asset> images = List<Asset>();
-  List<File>files=List<File>();
+  List<File> files = List<File>();
   RequestServices _requestServices = RequestServices();
   String token;
 
@@ -87,7 +88,6 @@ class _AddPostState extends State<AddPost> {
 
     setState(() {
       images = resultList;
-
     });
 
     getFileList();
@@ -95,19 +95,18 @@ class _AddPostState extends State<AddPost> {
 
   void getFileList() async {
     for (int i = 0; i < images.length; i++) {
-      var path = await FlutterAbsolutePath.getAbsolutePath(images[i].identifier);
+      var path =
+          await FlutterAbsolutePath.getAbsolutePath(images[i].identifier);
       //var path = await images[i].filePath;
       var file = await getImageFileFromAsset(path);
       files.add(file);
     }
   }
 
-
   Future<File> getImageFileFromAsset(String path) async {
     final file = File(path);
     return file;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -137,20 +136,35 @@ class _AddPostState extends State<AddPost> {
                     icon: Icons.drive_file_rename_outline,
                     hintText: widget.postType + " Description",
                     errorMsg: 'Enter a valid description'),
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
                 RaisedButton(
                   child: Text('Browse an Image'),
                   onPressed: loadAssets,
                 ),
                 RoundedButton(
-                  text: "Add " + widget.postType,
-                  press: () async {
-                    Post post = Post('O', titleController.text.toString(),
-                        descriptionController.text.toString(), [1], images: images);
+                    text: "Add " + widget.postType,
+                    press: () async {
+                      Post post = Post('O', titleController.text.toString(),
+                          descriptionController.text.toString(), [1],
+                          images: images);
 
-
-                    _requestServices.createPost(token, post).then((response) => print("response.body"));
-                  }
-                ),
+                      _requestServices
+                          .createPost(token, post)
+                          .then((response) => print("response.body"));
+                    }),
                 Expanded(
                   child: buildGridView(),
                 ),

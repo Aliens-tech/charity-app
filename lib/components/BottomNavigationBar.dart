@@ -5,9 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:opinionat/constants.dart';
 import 'package:opinionat/screens/HomeScreen.dart';
-import 'package:opinionat/screens/OffersScreen.dart';
+import 'package:opinionat/screens/PostsScreen.dart';
 import 'package:opinionat/screens/ProfileScreen.dart';
-import 'package:opinionat/screens/RequestsScreen.dart';
 import 'package:opinionat/screens/SettingsScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,15 +16,16 @@ class BottomNav extends StatefulWidget {
 }
 
 class _BottomNavState extends State<BottomNav> {
-
   PageController _pageController = PageController();
+  String screenName;
   List<Widget> _screen = [
-    RequestsPage(),
-    OffersPage(),
+    PostsScreen(),
+    PostsScreen(),
     Home(),
     ProfileScreen(),
     SettingsPage()
   ];
+
   @override
   void initState() {
     super.initState();
@@ -50,7 +50,8 @@ class _BottomNavState extends State<BottomNav> {
         ],
         onTap: (index) async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-         await prefs.setInt('screenName',index);
+          index==1? screenName="offers":  screenName="requests";
+          await prefs.setString('screenName', screenName);
           _pageController.jumpToPage(index);
         },
       ),

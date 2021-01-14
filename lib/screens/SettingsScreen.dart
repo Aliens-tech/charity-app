@@ -17,6 +17,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
+    resetFilter();
     _dark = false;
     getToken().then((val) {
       setState(() {
@@ -30,7 +31,12 @@ class _SettingsPageState extends State<SettingsPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString("jwt");
   }
+  void resetFilter()async{
 
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('filterType', "");
+
+  }
   void logoutConfirmation() {
     Widget cancelButton = FlatButton(
       child: Text("Cancel"),

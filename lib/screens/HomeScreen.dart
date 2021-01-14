@@ -27,6 +27,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    resetFilter();
     getToken().then((val) {
       setState(() {
         token = val;
@@ -34,6 +35,12 @@ class _HomeState extends State<Home> {
     });
   }
 
+  void resetFilter()async{
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('filterType', "");
+
+  }
   dynamic getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString("jwt");
