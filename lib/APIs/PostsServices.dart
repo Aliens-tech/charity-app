@@ -15,14 +15,14 @@ class RequestServices {
     };
     List<Post> posts = [];
 
-    var data =
-        await http.get(BASE_URL + '/posts/$post_type/', headers: headers);
+    var data = await http.get(BASE_URL + '/posts/$post_type/', headers: headers);
     var jsonData = json.decode(data.body);
     for (var p in jsonData) {
       Post post = Post.response('R', p["title"], p["description"],
-          p["categories"], p["created_at"], p["price"], p["image_item"]);
+          p["categories"], p["created_at"], p["address"], p["images_list"]);
       posts.add(post);
     }
+
     return posts;
   }
   Future<List<Post>> searchPosts(
@@ -41,7 +41,7 @@ class RequestServices {
     var jsonData = json.decode(data.body);
     for (var p in jsonData) {
       Post post = Post.response('O', p["title"], p["description"],
-          p["categories"], p["created_at"], p["price"], p["image_item"]);
+          p["categories"], p["created_at"], p["address"], p["images_list"]);
       posts.add(post);
     }
     return posts;
@@ -63,7 +63,7 @@ class RequestServices {
     var jsonData = json.decode(data.body);
     for (var p in jsonData) {
       Post post = Post.response('O', p["title"], p["description"],
-          p["categories"], p["created_at"], p["price"], p["image_item"]);
+          p["categories"], p["created_at"], p["address"], p["images_list"]);
       posts.add(post);
     }
     return posts;
