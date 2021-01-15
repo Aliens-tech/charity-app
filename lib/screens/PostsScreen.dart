@@ -1,9 +1,6 @@
-import 'dart:convert';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:opinionat/APIs/PostsServices.dart';
 import 'package:opinionat/constants.dart';
 import 'package:opinionat/models/post.dart';
@@ -11,7 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PostsScreen extends StatefulWidget {
   static String id = 'PostsScreen';
-
+  String screenName;
+  PostsScreen({this.screenName});
   @override
   _PostsScreenState createState() => _PostsScreenState();
 }
@@ -20,7 +18,6 @@ class _PostsScreenState extends State<PostsScreen>
     with SingleTickerProviderStateMixin {
   RequestServices _requestServices = RequestServices();
   String token;
-  String screenName;
   String username, title, description, createdAt;
   List<dynamic> tags;
   List<dynamic> response;
@@ -36,7 +33,7 @@ class _PostsScreenState extends State<PostsScreen>
   Curve _curve = Curves.easeOut;
   double _fabHeight = 56.0;
   String filterType = "";
-
+  TextEditingController _searchController = TextEditingController();
 
 
   @override
@@ -68,17 +65,6 @@ class _PostsScreenState extends State<PostsScreen>
       });
     });
 
-    getFilterType().then((val) {
-      setState(() {
-        filterType = val;
-      });
-    });
-
-    getScreenName().then((val) {
-      setState(() {
-        screenName = val;
-      });
-    });
     super.initState();
   }
 
@@ -101,15 +87,6 @@ class _PostsScreenState extends State<PostsScreen>
     return prefs.getString("jwt");
   }
 
-  dynamic getFilterType() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString("filterType");
-  }
-
-  dynamic getScreenName() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString("screenName");
-  }
 
   Widget buttonToggle() {
     return Container(
@@ -133,10 +110,8 @@ class _PostsScreenState extends State<PostsScreen>
       child: FloatingActionButton(
         heroTag: null,
         onPressed: () async {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('filterType', 'alpha');
           setState(() {
-            stream=getData();
+            stream=getData(filterType: "alpha");
           });
         },
         tooltip: "Filter by alphabetical",
@@ -150,10 +125,8 @@ class _PostsScreenState extends State<PostsScreen>
       child: FloatingActionButton(
         heroTag: null,
         onPressed: () async {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('filterType', 'price');
           setState(() {
-            stream=getData();
+            stream=getData(filterType: "price");
           });
         },
         tooltip: "Filter by price",
@@ -163,19 +136,17 @@ class _PostsScreenState extends State<PostsScreen>
   }
 
 
-  Stream<List<Post>> getData() async* {
+  Stream<List<Post>> getData({String filterType = ""}) async* {
     yield* Stream.periodic(Duration(seconds: 1), (_) {
       return filterType == ""
-          ? _requestServices.getPosts(token, screenName)
-          : _requestServices.getFilteredPosts(token, screenName, filterType);
+          ? _requestServices.getPosts(token, widget.screenName)
+          : _requestServices.getFilteredPosts(token, widget.screenName, 'filter/'+filterType);
     }).asyncMap((event) async => await event);
   }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
     return Container(
       child: Scaffold(
           floatingActionButton: Column(
@@ -210,18 +181,26 @@ class _PostsScreenState extends State<PostsScreen>
                   child: Text('Loading...'),
                 );
               } else {
-                print(screenName);
-                print(filterType);
                 return Scaffold(
                   appBar: AppBar(
+                    automaticallyImplyLeading: false,
+
                     title: !isSearching
-                        ? Text('All $screenName')
+                        ? Text('All ${widget.screenName}')
                         : TextField(
-                      style: TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                          icon: Icon(
-                            Icons.search,
-                            color: Colors.white,
+                          controller: _searchController,
+                          style: TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                          icon: InkWell(
+                            onTap: (){
+                              setState(() {
+                                stream = _requestServices.searchPosts(token, widget.screenName, _searchController.text).asStream();
+                              });
+                            },
+                            child: Icon(
+                              Icons.search,
+                              color: Colors.white,
+                            ),
                           ),
                           hintText: 'Search a needed offer here..',
                           hintStyle: TextStyle(color: Colors.white)),
@@ -240,10 +219,7 @@ class _PostsScreenState extends State<PostsScreen>
                         },
                       )
                           : IconButton(
-                        icon: Icon(
-                          Icons.search,
-                          color: Colors.white,
-                        ),
+                        icon: Icon(Icons.search),
                         onPressed: () {
                           setState(() {
                             this.isSearching = true;

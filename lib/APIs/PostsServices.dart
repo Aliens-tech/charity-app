@@ -6,6 +6,8 @@ import 'package:opinionat/constants.dart';
 import 'package:opinionat/models/post.dart';
 
 class RequestServices {
+
+
   Future<List<Post>> getPosts(String token, String post_type) async {
     Map<String, String> headers = {
       "Content-Type": "application/json",
@@ -23,6 +25,27 @@ class RequestServices {
     }
     return posts;
   }
+  Future<List<Post>> searchPosts(
+      String token, String postType, String searchQuery) async {
+
+
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Token " + token
+    };
+
+    List<Post> posts = [];
+    var data = await http.get(
+        BASE_URL + '/posts/search/?post_type=${postType[0].toUpperCase()}&title=${searchQuery}',
+        headers: headers);
+    var jsonData = json.decode(data.body);
+    for (var p in jsonData) {
+      Post post = Post.response('O', p["title"], p["description"],
+          p["categories"], p["created_at"], p["price"], p["image_item"]);
+      posts.add(post);
+    }
+    return posts;
+  }
 
   Future<List<Post>> getFilteredPosts(
       String token, String postType, String filterType) async {
@@ -35,7 +58,7 @@ class RequestServices {
 
     List<Post> posts = [];
     var data = await http.get(
-        BASE_URL + '/posts/filter/$filterType/?post_type=${postType[0].toUpperCase()}',
+        BASE_URL + '/posts/$filterType/?post_type=${postType[0].toUpperCase()}',
         headers: headers);
     var jsonData = json.decode(data.body);
     for (var p in jsonData) {

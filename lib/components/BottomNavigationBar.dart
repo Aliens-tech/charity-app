@@ -19,8 +19,8 @@ class _BottomNavState extends State<BottomNav> {
   PageController _pageController = PageController();
   String screenName;
   List<Widget> _screen = [
-    PostsScreen(),
-    PostsScreen(),
+    PostsScreen(screenName: "requests"),
+    PostsScreen(screenName: "offers"),
     Home(),
     ProfileScreen(),
     SettingsPage()
@@ -49,9 +49,9 @@ class _BottomNavState extends State<BottomNav> {
           Icon(Icons.settings, size: 25, color: Colors.white),
         ],
         onTap: (index) async {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          index==1? screenName="offers":  screenName="requests";
-          await prefs.setString('screenName', screenName);
+          // SharedPreferences prefs = await SharedPreferences.getInstance();
+          // index==1? screenName="offers":  screenName="requests";
+          // await prefs.setString('screenName', screenName);
           _pageController.jumpToPage(index);
         },
       ),
