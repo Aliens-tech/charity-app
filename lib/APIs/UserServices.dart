@@ -31,28 +31,32 @@ class UserServices {
     return response;
   }
 
+
   Future<dynamic> getProfileData(String token) async {
     Map<String, String> headers = {
       "Content-Type": "application/json",
       "Authorization": "Token " + token
     };
-    print(token);
+
     var data =
-        await http.get(BASE_URL + '/users/get-user-data', headers: headers);
+        await http.get(BASE_URL + '/users/get/data', headers: headers);
     var jsonData=json.decode(data.body);
-    User user=User.profile(jsonData["username"],jsonData["stars"]);
 
-
-    print(user.username);
+    User user=User.profile(jsonData["username"],jsonData["stars"],jsonData["bio"],jsonData["image"]);
     return user;
 
   }
 
+  Future<dynamic> updateProfileData(String token,User user)async{
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Token " + token
+    };
+    String body=json.encode(user);
+    var response =
+    await http.post(BASE_URL + '/users/update/',body: body, headers: headers);
 
-
-
-
-
-
+    return response;
+}
 
 }

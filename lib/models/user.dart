@@ -4,9 +4,11 @@ class User {
   String password;
   String phone;
   int stars;
+  String bio;
+  String image;
+  String address;
 
-
-  User.profile(this.username, this.stars);
+  User.profile(this.username, this.stars,this.bio,this.image);
 
   User();
 

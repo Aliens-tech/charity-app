@@ -25,9 +25,9 @@ class RequestServices {
 
     return posts;
   }
+
   Future<List<Post>> searchPosts(
       String token, String postType, String searchQuery) async {
-
 
     Map<String, String> headers = {
       "Content-Type": "application/json",

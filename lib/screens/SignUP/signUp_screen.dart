@@ -103,26 +103,26 @@ class _SignUpScreenState extends  State<SignUpScreen> {
                   ),
                   RoundedInputField(
                     errorMsg: 'Enter a valid username', controller: _usernameController, 
-                    hintText: "Username",
+                    text: "Username",
                   ),
                   RoundedInputField(
                     controller: _emailController, icon: Icons.mail,
-                    hintText: "E-mail", type: TextInputType.emailAddress,
+                    text: "E-mail", type: TextInputType.emailAddress,
                     errorMsg: 'Enter a valid email'
                   ),
                   RoundedInputField(
                     controller: _phoneController, icon: Icons.phone_iphone, 
-                    hintText: "Phone number", type: TextInputType.number,
+                    text: "Phone number", type: TextInputType.number,
                     errorMsg: 'Enter a valid Phone'
                   ),
                   RoundedInputField(
                     controller: _passwordController, icon: Icons.lock, 
-                    hintText: "Password", suffixIcon: Icons.visibility, isPassword: true,
+                    text: "Password", suffixIcon: Icons.visibility, isPassword: true,
                     errorMsg: 'Enter a valid password'
                   ),
                   RoundedInputField(
                     controller: _confirmPasswordController, icon: Icons.lock, 
-                    hintText: "Confirm Password", suffixIcon: Icons.visibility, isPassword: true,
+                    text: "Confirm Password", suffixIcon: Icons.visibility, isPassword: true,
                     validator: (value) {
                       if (value.isEmpty) { 
                         return 'Enter a valid password'; 
