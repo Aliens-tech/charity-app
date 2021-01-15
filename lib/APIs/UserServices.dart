@@ -40,6 +40,7 @@ class UserServices {
 
     var data = await http.get(BASE_URL + '/users/get/data', headers: headers);
     var jsonData = json.decode(data.body);
+
     User user=User.profile(jsonData["username"],jsonData["stars"],jsonData["bio"],jsonData["image"]);
     return user;
   }
