@@ -22,10 +22,8 @@ class Post(models.Model):
     post_type = models.CharField(choices=POST_STATUS_TYPES, max_length=1, default='O')
     categories = models.ManyToManyField(Category)
     title = models.CharField(max_length=100)
-    city = models.CharField(max_length=30, default="")
-    region = models.CharField(max_length=30, default="")
+    address = models.CharField(max_length=100, default='')
     description = models.TextField()
-    price = models.FloatField(default=0.0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

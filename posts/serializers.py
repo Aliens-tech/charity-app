@@ -23,7 +23,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ("id", "categories", "user", "images_list", "title", "description", 'city', 'region', 'created_at', 'price') 
+        fields = ("id", "categories", "user", "images_list", "title", "description", 'address', 'created_at',) 
 
     def get_categories(self, obj):
         post_categories = ''
