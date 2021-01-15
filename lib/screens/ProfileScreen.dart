@@ -31,38 +31,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController _addressController = TextEditingController();
   TextEditingController _bioController = TextEditingController();
 
-
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
+        print('done');
       } else {
         print('No image selected.');
       }
     });
   }
 
-
-
-
   showLoader() {
     showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => Dialog(
-            child: new Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CircularProgressIndicator(backgroundColor: kPrimaryColor, valueColor: new AlwaysStoppedAnimation<Color>(kPrimaryLightColor))
-                  ),
-                  Text("Loading"),
-                ])
-        )
-    );
+                child: new Row(mainAxisSize: MainAxisSize.min, children: [
+              Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator(
+                      backgroundColor: kPrimaryColor,
+                      valueColor: new AlwaysStoppedAnimation<Color>(
+                          kPrimaryLightColor))),
+              Text("Loading"),
+            ])));
   }
 
   @override
@@ -75,25 +70,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-
-  void validateUpdateData(){
+  void validateUpdateData() {
     if (_formKey.currentState.validate()) {
       showLoader();
       _user.username = _usernameController.text;
 //  _user.address = _addressController.text;
       _user.bio = _bioController.text;
 
-
-      _userServices.updateProfileData(token,_user).then((response) {
-        if(response.statusCode == 201){
+      _userServices.updateProfileData(token, _user).then((response) {
+        if (response.statusCode == 201) {
           _usernameController.clear();
           _addressController.clear();
           _bioController.clear();
-
-       }else{
-          print("error:"+response.body);
+        } else {
+          print("error:" + response.body);
           print(response.statusCode);
-        //  _key.currentState.showSnackBar(SnackBar(content: Text(response.body)));
+          //  _key.currentState.showSnackBar(SnackBar(content: Text(response.body)));
           Navigator.of(context).pop();
         }
         return;
@@ -101,61 +93,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
     _formKey.currentState.save();
   }
-
-
-/*
-  Future<void> loadAssets() async {
-    List<Asset> resultList = List<Asset>();
-    String error = 'No Error Detected';
-
-    try {
-      resultList = await MultiImagePicker.pickImages(
-        maxImages: 4,
-        enableCamera: true,
-        selectedAssets: images,
-        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
-        materialOptions: MaterialOptions(
-          actionBarColor: "#028910",
-          actionBarTitle: "Example App",
-          allViewTitle: "All Photos",
-          useDetailsView: false,
-          selectCircleStrokeColor: "#000000",
-        ),
-      );
-    } on Exception catch (e) {
-      error = e.toString();
-    }
-
-    if (!mounted) return;
-
-    setState(() {
-      images = resultList;
-    });
-
-    getFileList();
-  }
-
-
-
-  void getFileList() async {
-    for (int i = 0; i < images.length; i++) {
-      var path =
-      await FlutterAbsolutePath.getAbsolutePath(images[i].identifier);
-      //var path = await images[i].filePath;
-      var file = await getImageFileFromAsset(path);
-      files.add(file);
-    }
-  }
-
-  Future<File> getImageFileFromAsset(String path) async {
-    final file = File(path);
-    return file;
-  }
-
-*/
-
-
-
 
   dynamic getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -190,16 +127,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: Stack(
                                 children: [
                                   InkWell(
-                                    onTap: null
-                                   , child: CircleAvatar(
-                                      child: Text(snapshot.data.username[0].toUpperCase(),
-                                          style: TextStyle(fontSize: 40)),
+                                    onTap: getImage,
+                                    child: CircleAvatar(
+                                      child: _image == null
+                                          ? Text(
+                                              snapshot.data.username[0]
+                                                  .toUpperCase(),
+                                              style: TextStyle(fontSize: 40))
+                                          : Image.file(_image),
                                       radius: 50.0,
                                       backgroundColor: kPrimaryColor,
                                     ),
                                   ),
-                                  Positioned(child: CircleAvatar(radius: 17,backgroundColor: Colors.white,
-                                      child: Icon(Icons.add_a_photo,color:Colors.black54,)),bottom: 0,left: 50 ,)
+                                  Positioned(
+                                    child: CircleAvatar(
+                                      radius: 17,
+                                      backgroundColor: Colors.white,
+                                      child: Icon(
+                                        Icons.add_a_photo,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    bottom: 0,
+                                    left: 50,
+                                  )
                                 ],
                               ),
                             ),
@@ -208,34 +159,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         SizedBox(
                           height: 60,
                         ),
-
                         RoundedInputField(
-                          errorMsg: 'Enter a valid username', controller: _usernameController,
+                          errorMsg: 'Enter a valid username',
+                          controller: _usernameController,
                           text: snapshot.data.username,
-
                         ),
                         RoundedInputField(
-                            controller: _addressController, icon: Icons.location_city,
-                            text:  "Cairo, Egypt", type: TextInputType.emailAddress,
-                            errorMsg: 'Enter a valid email'
-                        ),
+                            controller: _addressController,
+                            icon: Icons.location_city,
+                            text: "Cairo, Egypt",
+                            type: TextInputType.emailAddress,
+                            errorMsg: 'Enter a valid email'),
                         RoundedInputField(
-                            controller: _bioController, icon: Icons.local_florist,
-                            text: bio, type: TextInputType.number,
-                            errorMsg: 'Enter a valid Phone'
-                        ),
-
-
+                            controller: _bioController,
+                            icon: Icons.local_florist,
+                            text: bio,
+                            type: TextInputType.number,
+                            errorMsg: 'Enter a valid Phone'),
                         SizedBox(
                           height: 10,
                         ),
                         Card(
-                          margin:
-                              EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 8.0),
                           elevation: 2.0,
                           child: Padding(
-                            padding:
-                                EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 30),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -257,8 +207,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           height: 15,
                         ),
                         Card(
-                          margin:
-                              EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 8.0),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
@@ -307,24 +257,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             fontSize: 22.0,
                                             fontWeight: FontWeight.w300),
                                       ),
-
                                     ],
                                   ),
                                 ),
                               ],
                             ),
-
                           ),
                         ),
                         SizedBox(
                           height: 50,
                         ),
-                        RoundedButton(
-                            text: "Update Data",
-                            press: ()  {
-
-
-                            }),
+                        RoundedButton(text: "Update Data", press: () {}),
                       ],
                     ),
                   ),
