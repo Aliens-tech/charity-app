@@ -1,9 +1,11 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:opinionat/APIs/PostsServices.dart';
 import 'package:opinionat/constants.dart';
 import 'package:opinionat/models/post.dart';
+import 'package:opinionat/screens/PostDetails.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PostsScreen extends StatefulWidget {
@@ -172,15 +174,14 @@ class _PostsScreenState extends State<PostsScreen>
           backgroundColor: kPrimaryLightColor,
           body: StreamBuilder(
             stream: stream,
-            /*filterType == ""
-                ? _requestServices.getPosts(token, screenName).asStream()
-                : _requestServices.getFilteredPosts(token, screenName, filterType).asStream(),*/
             builder: (BuildContext context, AsyncSnapshot snapshot) {
+              print(snapshot);
               if (!snapshot.hasData) {
                 return Center(
                   child: Text('Loading...'),
                 );
               } else {
+
                 return Scaffold(
                   appBar: AppBar(
                     automaticallyImplyLeading: false,
@@ -243,77 +244,78 @@ class _PostsScreenState extends State<PostsScreen>
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                child: Container(
-                                  width: size.width,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 10.0, vertical: 10.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Flexible(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              snapshot.data[index].title,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                  color: kPrimaryColor),
-                                            ),
-                                            SizedBox(
-                                              height: size.height * 0.01,
-                                            ),
-                                            Text(
-                                              snapshot.data[index].description,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            SizedBox(
-                                              height: size.height * 0.01,
-                                            ),
-                                            Text(
-                                              snapshot.data[index].created_at,
-                                              style: TextStyle(
-                                                  fontStyle: FontStyle.italic,
-                                                  color: Colors.green),
-                                            ),
-                                            SizedBox(
-                                              height: size.height * 0.01,
-                                            ),
-                                            Text(
-                                                snapshot.data[index]
-                                                    .responsed_categories,
+                                child: InkWell(
+                                  onTap: (){
+                                    Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) {
+                                        return PostDetails(snapshot.data[index]);
+                                      },
+                                    ),
+                                  );}  ,
+                                  child: Container(
+                                    width: size.width,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 10.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Flexible(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                snapshot.data[index].title,
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 14)),
+                                                    fontSize: 18,
+                                                    color: kPrimaryColor),
+                                              ),
+                                              SizedBox(
+                                                height: size.height * 0.01,
+                                              ),
+                                              Text(
+                                                snapshot.data[index].description,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              SizedBox(
+                                                height: size.height * 0.01,
+                                              ),
+                                              Text(
+                                                snapshot.data[index].created_at,
+                                                style: TextStyle(
+                                                    fontStyle: FontStyle.italic,
+                                                    color: Colors.green),
+                                              ),
+                                              SizedBox(
+                                                height: size.height * 0.01,
+                                              ),
+                                              Text(
+                                                  snapshot.data[index]
+                                                      .responsed_categories,
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 14)),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(width: size.width * 0.1),
+                                        Column(
+                                          children: [
+                                            Image.network(
+                                              snapshot.data[index].images_list[0],
+                                              fit: BoxFit.cover,
+                                              width: size.width * 0.3,
+                                              height: size.height * 0.18,
+                                            ),
+                                            SizedBox(
+                                              height: size.height * 0.02,
+                                            ),
                                           ],
                                         ),
-                                      ),
-                                      SizedBox(width: size.width * 0.1),
-                                      Column(
-                                        children: [
-                                          Image.network(
-                                            snapshot.data[index].image_item,
-                                            fit: BoxFit.cover,
-                                            width: size.width * 0.3,
-                                            height: size.height * 0.18,
-                                          ),
-                                          SizedBox(
-                                            height: size.height * 0.02,
-                                          ),
-                                          Text(
-                                            snapshot.data[index].price
-                                                .toString() +
-                                                " LE",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: kPrimaryColor),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),

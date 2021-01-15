@@ -109,14 +109,9 @@ class _HomeState extends State<Home> {
                 Expanded(
                   child: RaisedButton(
                     padding: const EdgeInsets.symmetric(vertical:70),
-
                       color: kPrimaryColor,
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => AddPost(postType: "Request")));
-
-                      //   createAlertDialog(context, "Request").then((value) =>
-                      // _requestServices.CreatePost(token, value)
-                      //     .then((value) => print(jsonDecode(value.body))));
                       },
                       child: Text(
                       'Add Request',
