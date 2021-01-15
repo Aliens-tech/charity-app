@@ -1,4 +1,5 @@
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:opinionat/models/user.dart';
 
 class Post {
   int id;
@@ -8,7 +9,7 @@ class Post {
   String created_at;
   String updated_at;
   String address;
-  String user;
+  dynamic user;
   List<Asset> images;
   List<dynamic> images_list;
   String image_item;
@@ -21,7 +22,7 @@ class Post {
 
   Post.request(this.postType, this.title, this.description,this.requested_categories,this.created_at,this.address,{this.images});
 
-  Post.response(this.postType, this.title, this.description,this.responsed_categories,this.created_at,this.address,this.images_list);
+  Post.response(this.postType, this.title, this.description,this.responsed_categories,this.created_at,this.address,this.images_list, this.user);
 
 
 }

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:opinionat/constants.dart';
 import 'package:opinionat/models/post.dart';
@@ -19,7 +18,7 @@ class RequestServices {
     var jsonData = json.decode(data.body);
     for (var p in jsonData) {
       Post post = Post.response('R', p["title"], p["description"],
-          p["categories"], p["created_at"], p["address"], p["images_list"]);
+          p["categories"], p["created_at"], p["address"], p["images_list"], p["user"]);
       posts.add(post);
     }
 
@@ -41,7 +40,7 @@ class RequestServices {
     var jsonData = json.decode(data.body);
     for (var p in jsonData) {
       Post post = Post.response('O', p["title"], p["description"],
-          p["categories"], p["created_at"], p["address"], p["images_list"]);
+          p["categories"], p["created_at"], p["address"], p["images_list"], p["user"]);
       posts.add(post);
     }
     return posts;
@@ -63,7 +62,7 @@ class RequestServices {
     var jsonData = json.decode(data.body);
     for (var p in jsonData) {
       Post post = Post.response('O', p["title"], p["description"],
-          p["categories"], p["created_at"], p["address"], p["images_list"]);
+          p["categories"], p["created_at"], p["address"], p["images_list"], p["user"]);
       posts.add(post);
     }
     return posts;

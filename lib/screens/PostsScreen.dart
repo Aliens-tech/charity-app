@@ -175,13 +175,11 @@ class _PostsScreenState extends State<PostsScreen>
           body: StreamBuilder(
             stream: stream,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              print(snapshot);
               if (!snapshot.hasData) {
                 return Center(
                   child: Text('Loading...'),
                 );
               } else {
-
                 return Scaffold(
                   appBar: AppBar(
                     automaticallyImplyLeading: false,
