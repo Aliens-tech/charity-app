@@ -1,3 +1,4 @@
+from rest_framework.generics import CreateAPIView, GenericAPIView
 from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
@@ -6,7 +7,11 @@ from rest_framework.authtoken.models import Token
 
 from django.contrib.auth import authenticate
 
-from .serializers import SignupUserSerializer, UserDataSerializer
+from .serializers import (
+    SignupUserSerializer, 
+    UserDataSerializer,
+    UserUpdateSerializer
+)
 
 from .models import User, StarUser
 
@@ -70,6 +75,52 @@ class GetUserDataAPI(APIView):
     def get(self, request):
         user_serializer =  UserDataSerializer(request.user)
         return Response(user_serializer.data, status=status.HTTP_200_OK)
+
+class UpdateUserAPI(GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserUpdateSerializer
+
+    def put(self, request):
+        serializer = self.get_serializer(instance=request.user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            returned_serializer = UserDataSerializer(request.user)
+            return Response(
+                {'data': returned_serializer.data},
+                status=status.HTTP_200_OK
+            )
+        else:
+            return Response(
+                {'error': serializer.errors},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+class DeleteProfileImageAPI(APIView):
+    def delete(self, request):
+        if request.user.image:
+            request.user.image = None
+            request.user.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(
+                {'error': 'user does not have image'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+class AddProfileImageAPI(APIView):
+    def post(self, request):
+        if request.data.get('image'):
+            request.user.image = request.data.get('image')
+            request.user.save()
+            return Response(
+                {'data': 'image added'},
+                status=status.HTTP_201_CREATED
+            )
+        else:
+            return Response(
+                {'error': 'you do not add image'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 class ToggleStarUser(APIView):
     def post(self, request, user_id):
