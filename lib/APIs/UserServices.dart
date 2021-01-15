@@ -31,41 +31,44 @@ class UserServices {
     return response;
   }
 
+
   Future<dynamic> getProfileData(String token) async {
     Map<String, String> headers = {
       "Content-Type": "application/json",
       "Authorization": "Token " + token
     };
-    print(token);
-    var data =
-        await http.get(BASE_URL + '/users/get-user-data', headers: headers);
-    var jsonData = json.decode(data.body);
-    User user = User.profile(jsonData["username"], jsonData["stars"]);
 
-    print(user.username);
+    var data = await http.get(BASE_URL + '/users/get/data', headers: headers);
+    var jsonData = json.decode(data.body);
+    User user=User.profile(jsonData["username"],jsonData["stars"],jsonData["bio"],jsonData["image"]);
     return user;
   }
 
-  Future<dynamic> getOtherProfileData(String token, int id) async {
+  Future<User> getOtherProfileData(String token, int id) async {
     Map<String, String> headers = {
       "Content-Type": "application/json",
       "Authorization": "Token " + token
     };
-    print(token);
-    var data =
-        await http.get(BASE_URL + '/users/get/data' + id.toString(), headers: headers);
+    var data = await http.get(BASE_URL + '/users/get/data/' + id.toString(), headers: headers);
     var jsonData = json.decode(data.body);
     User user = User.otherProfile(
-        jsonData["username"],
-        jsonData["email"],
-        jsonData["bio"],
-        jsonData["phone"],
-        jsonData["image"],
-        jsonData["stars"],
+        jsonData["user"],
         jsonData["offers"],
         jsonData["requests"],
     );
-
     return user;
   }
+
+  Future<dynamic> updateProfileData(String token,User user)async{
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Token " + token
+    };
+    String body=json.encode(user);
+    var response =
+    await http.post(BASE_URL + '/users/update/',body: body, headers: headers);
+
+    return response;
+}
+
 }

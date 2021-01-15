@@ -8,12 +8,17 @@ class User {
   int stars;
   String image;
   String bio;
-  List<Post> requests;
-  List<Post> offers;
+  List<dynamic> requests;
+  List<dynamic> offers;
+  String address;
+  dynamic user;
 
 
-  User.profile(this.username, this.stars);
-  User.otherProfile(this.username, this.email, this.bio, this.phone, this.image, this.stars, this.offers, this.requests);
+
+  User.otherProfile(this.user, this.offers, this.requests);
+
+
+  User.profile(this.username, this.stars,this.bio,this.image);
 
   User();
 

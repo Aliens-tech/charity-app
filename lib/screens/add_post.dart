@@ -174,7 +174,6 @@ class _AddPostState extends State<AddPost> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
-
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -189,7 +188,7 @@ class _AddPostState extends State<AddPost> {
                 ),
                 SizedBox(height: height * 0.03),
                 RoundedInputField(
-                  hintText: widget.postType + " Title",
+                  text: widget.postType + " Title",
                   errorMsg: 'Enter a valid title',
                   controller: titleController,
                   icon: Icons.text_snippet,
@@ -197,7 +196,7 @@ class _AddPostState extends State<AddPost> {
                 RoundedInputField(
                     controller: descriptionController,
                     icon: Icons.drive_file_rename_outline,
-                    hintText: widget.postType + " Description",
+                    text: widget.postType + " Description",
                     errorMsg: 'Enter a valid description'),
                 DropdownButton<String>(
                     items: [
@@ -233,8 +232,9 @@ class _AddPostState extends State<AddPost> {
                         : (value) => secondValueChanged(value),
                     disabledHint: Text("Select city first"),
                     hint: Center(
-                        child:
-                            region == "" ? Text("Select Region") : Text(region))),
+                        child: region == ""
+                            ? Text("Select Region")
+                            : Text(region))),
                 SizedBox(
                   height: height * 0.03,
                 ),

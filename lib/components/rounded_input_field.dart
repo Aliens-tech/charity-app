@@ -4,7 +4,7 @@ import 'package:opinionat/components/text_field_container.dart';
 import '../constants.dart';
 
 class RoundedInputField extends StatelessWidget {
-  final String hintText, errorMsg;
+  final String text, errorMsg;
   final TextEditingController controller;
   final bool isPassword;
   final IconData icon, suffixIcon;
@@ -15,7 +15,7 @@ class RoundedInputField extends StatelessWidget {
 
   const RoundedInputField({
     Key key,
-    this.hintText, this.isPassword = false,
+    this.text, this.isPassword = false,
     this.icon = Icons.person, this.suffixIcon,
     this.onChanged, this.type, this.controller, 
     this.errorMsg, this.validator
@@ -28,6 +28,7 @@ class RoundedInputField extends StatelessWidget {
         onChanged: onChanged,
         controller: controller,
         keyboardType: type,
+
         obscureText: isPassword,
         validator: validator != null ? 
         validator
@@ -39,7 +40,7 @@ class RoundedInputField extends StatelessWidget {
         },
       decoration: 
         InputDecoration(
-          hintText: hintText,
+          hintText: text,
           icon: Icon(icon, color: kPrimaryColor),
           suffixIcon: Icon(suffixIcon, color: kPrimaryColor),
           border: InputBorder.none

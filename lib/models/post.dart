@@ -19,7 +19,6 @@ class Post {
   Post(this.postType, this.title, this.description, this.requested_categories,
       {this.images});
 
-
   Post.request(this.postType, this.title, this.description,this.requested_categories,this.created_at,this.address,{this.images});
 
   Post.response(this.postType, this.title, this.description,this.responsed_categories,this.created_at,this.address,this.images_list, this.user);

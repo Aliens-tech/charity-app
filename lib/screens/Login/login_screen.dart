@@ -96,12 +96,12 @@ class _LoginScreenState extends  State<LoginScreen> {
                   SizedBox(height: size.height * 0.03),
                   RoundedInputField(
                       controller: _emailController, icon: Icons.mail,
-                      hintText: "E-mail", type: TextInputType.emailAddress,
+                      text: "E-mail", type: TextInputType.emailAddress,
                       errorMsg: 'Enter a valid email'
                   ),
                   RoundedInputField(
                       controller: _passwordController, icon: Icons.lock,
-                      hintText: "Password", suffixIcon: Icons.visibility, isPassword: true,
+                      text: "Password", suffixIcon: Icons.visibility, isPassword: true,
                       errorMsg: 'Enter a valid password'
                   ),
 
