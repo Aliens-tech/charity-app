@@ -15,6 +15,9 @@ from .serializers import (
 
 from .models import User, StarUser
 
+from posts.serializers import PostUserDataSerializer, PostSerializer
+from posts.models import Post
+
 class SignupAPIView(GenericAPIView):
     serializer_class = SignupUserSerializer
 
@@ -71,10 +74,32 @@ class LogoutAPIView(APIView):
         else:
             return Response({'error': 'you are not logged in'}, status=status.HTTP_400_BAD_REQUEST)
 
-class GetUserDataAPI(APIView):
+class GetUserCurrentDataAPI(APIView):
     def get(self, request):
         user_serializer =  UserDataSerializer(request.user)
         return Response(user_serializer.data, status=status.HTTP_200_OK)
+
+class GetUserProfileAPI(APIView):
+    def get(self, request, user_id):
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response(
+                {'error': 'user does not exist'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        user_serializer = UserDataSerializer(user)
+        requests_post_serializer = PostUserDataSerializer(user.posts.filter(post_type='R'), many=True)
+        offers_post_serializer = PostUserDataSerializer(user.posts.filter(post_type='O'), many=True)
+
+        return Response(
+            {
+                'user': user_serializer.data,
+                'requests': requests_post_serializer.data,
+                'offers': offers_post_serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
 
 class UpdateUserAPI(GenericAPIView):
     queryset = User.objects.all()

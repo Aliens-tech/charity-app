@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from .models import Post, Category, PostImage
+from users.serializers import UserPostDataSerializer
 
 import json
 
@@ -17,7 +18,7 @@ class PostImageSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     
     categories = serializers.SerializerMethodField()
-    user = serializers.StringRelatedField()
+    user = UserPostDataSerializer()
     images_list = serializers.SerializerMethodField()
     created_at = serializers.SerializerMethodField()
 
@@ -42,10 +43,37 @@ class PostSerializer(serializers.ModelSerializer):
     def get_created_at(self, obj):
         return obj.created_at.strftime("%m/%d/%Y, %H:%M:%S")
 
+class PostUserDataSerializer(serializers.ModelSerializer):
+    categories = serializers.SerializerMethodField()
+    images_list = serializers.SerializerMethodField()
+    created_at = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Post
+        exclude = ('user',)
+
+    def get_categories(self, obj):
+        post_categories = ''
+        categories = obj.categories.all()
+        for category in categories:
+            post_categories +='#%s '%(category.name)
+        return post_categories
+
+    def get_images_list(self, obj):
+        images_list  = obj.images.all()
+        images = []
+        for image in images_list:
+            images.append(image.img.url)
+        
+        return images
+
+    def get_created_at(self, obj):
+        return obj.created_at.strftime("%m/%d/%Y, %H:%M:%S")
+
 class PostDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        exclude = ('user', 'categories')
+        exclude = ('user',)
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
