@@ -99,17 +99,18 @@ class ListCategoriesAPI(ListAPIView):
     serializer_class = CategorySerializer
 
 class SearchPostTitleAPI(APIView):
-    def post(self, request):
-
+    def get(self, request):
+        
         # check if there is not title
-        if not request.data.get('title'):
+        if not request.query_params.get('title') and not request.query_params.get('post_type'):
             return Response(
-                {'error': 'please enter title you want to search for.'},
+                {'error': 'please enter title and post type you want to search for.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        searched_title = request.data.get('title')
-        posts = Post.objects.filter(title__icontains=searched_title)
+        searched_title = request.query_params.get('title')
+        post_type = request.query_params.get('post_type')
+        posts = Post.objects.filter(title__icontains=searched_title, post_type=post_type)
         serializer = PostSerializer(posts, many=True)
         return Response(
             serializer.data,
