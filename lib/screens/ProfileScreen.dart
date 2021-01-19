@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,11 +33,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController _bioController = TextEditingController();
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-
+    final pickedImage = await picker.getImage(source: ImageSource.gallery);
     setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
+      if (pickedImage != null) {
+        _image = pickedImage as File;
         print('done');
       } else {
         print('No image selected.');
@@ -55,9 +55,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: CircularProgressIndicator(
                       backgroundColor: kPrimaryColor,
                       valueColor: new AlwaysStoppedAnimation<Color>(
-                          kPrimaryLightColor))),
+                          kPrimaryLightColor),),),
               Text("Loading"),
-            ])));
+            ],),),);
   }
 
   @override
