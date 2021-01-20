@@ -26,6 +26,10 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
+  void loggedMeOut() async{
+    SharedPreferences preferences=await SharedPreferences.getInstance();
+    preferences.setBool("KeepMeLoggedIn", false);
+  }
 
   dynamic getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

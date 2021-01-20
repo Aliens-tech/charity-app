@@ -24,6 +24,7 @@ class _LoginScreenState extends  State<LoginScreen> {
   TextEditingController _passwordController = TextEditingController();
   User _user = User();
   UserServices _userServices = UserServices();
+  bool keepMeLoggedIn=false;
 
   showLoader() {
     showDialog(
@@ -43,8 +44,17 @@ class _LoginScreenState extends  State<LoginScreen> {
     );
   }
 
+  void keepUserLoggedIn() async{
+    SharedPreferences preferences=await SharedPreferences.getInstance();
+    preferences.setBool("KeepMeLoggedIn", keepMeLoggedIn);
+  }
+
+
   void validateLogin(){
     if (_formKey.currentState.validate()) {
+      if(keepMeLoggedIn==true){
+        keepUserLoggedIn();
+      }
       showLoader();
       _user.username = _emailController.text;
       _user.password = _passwordController.text;
@@ -69,6 +79,8 @@ class _LoginScreenState extends  State<LoginScreen> {
     }
     _formKey.currentState.save();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +117,26 @@ class _LoginScreenState extends  State<LoginScreen> {
                       errorMsg: 'Enter a valid password'
                   ),
 
+                  Padding(
+                    padding: EdgeInsets.only(left: 25),
+                    child: Row(
+                      children: [
+                        Checkbox(
+                            checkColor: kPrimaryColor,
+                            activeColor: Colors.white,
+                            value: keepMeLoggedIn, onChanged: (value){
+                          setState(() {
+                            keepMeLoggedIn=value;
+
+                          });
+
+                        }),
+                        Text('Remember Me')
+                      ],
+                    ),
+                  ),
                   SizedBox(height: size.height * 0.03),
+
                   RoundedButton(
                     text: "LOGIN",
                     press: validateLogin,

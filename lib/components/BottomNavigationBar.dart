@@ -32,33 +32,60 @@ class _BottomNavState extends State<BottomNav> {
     _pageController = PageController(initialPage: 2);
   }
 
+
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('Are you sure?'),
+        content: new Text('Do you want to exit an App'),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('No'),
+          ),
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: new Text('Yes'),
+          ),
+        ],
+      ),
+    )) ?? false;
+  }
+
+
+
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: CurvedNavigationBar(
-        index: 2,
-        animationDuration: Duration(milliseconds: 300),
-        color: kPrimaryColor,
-        backgroundColor: kPrimaryLightColor,
-        buttonBackgroundColor: kPrimaryColor,
-        items: <Widget>[
-          Icon(Icons.request_page, size: 25, color: Colors.white),
-          Icon(Icons.local_offer_outlined, size: 25, color: Colors.white),
-          Icon(Icons.home, size: 35, color: Colors.white),
-          Icon(Icons.account_circle, size: 25, color: Colors.white),
-          Icon(Icons.settings, size: 25, color: Colors.white),
-        ],
-        onTap: (index) async {
-          // SharedPreferences prefs = await SharedPreferences.getInstance();
-          // index==1? screenName="offers":  screenName="requests";
-          // await prefs.setString('screenName', screenName);
-          _pageController.jumpToPage(index);
-        },
-      ),
-      body: PageView(
-        controller: _pageController,
-        children: _screen,
-        physics: NeverScrollableScrollPhysics(),
+    return WillPopScope(
+      onWillPop:_onWillPop,
+      child: Scaffold(
+        bottomNavigationBar: CurvedNavigationBar(
+          index: 2,
+          animationDuration: Duration(milliseconds: 300),
+          color: kPrimaryColor,
+          backgroundColor: kPrimaryLightColor,
+          buttonBackgroundColor: kPrimaryColor,
+          items: <Widget>[
+            Icon(Icons.request_page, size: 25, color: Colors.white),
+            Icon(Icons.local_offer_outlined, size: 25, color: Colors.white),
+            Icon(Icons.home, size: 35, color: Colors.white),
+            Icon(Icons.account_circle, size: 25, color: Colors.white),
+            Icon(Icons.settings, size: 25, color: Colors.white),
+          ],
+          onTap: (index) async {
+            // SharedPreferences prefs = await SharedPreferences.getInstance();
+            // index==1? screenName="offers":  screenName="requests";
+            // await prefs.setString('screenName', screenName);
+            _pageController.jumpToPage(index);
+          },
+        ),
+        body: PageView(
+          controller: _pageController,
+          children: _screen,
+          physics: NeverScrollableScrollPhysics(),
+        ),
       ),
     );
   }

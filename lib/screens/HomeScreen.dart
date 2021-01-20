@@ -24,10 +24,10 @@ class _HomeState extends State<Home> {
   TextEditingController descriptionController = TextEditingController();
 
 
+
   @override
   void initState() {
     super.initState();
-    resetFilter();
     getToken().then((val) {
       setState(() {
         token = val;
@@ -35,57 +35,9 @@ class _HomeState extends State<Home> {
     });
   }
 
-  void resetFilter()async{
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('filterType', "");
-
-  }
   dynamic getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString("jwt");
-  }
-
-  Future<Post> createAlertDialog(BuildContext context, String postType) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Add a new '+postType),
-            content: Container(
-              height: MediaQuery.of(context).size.height / 7,
-              child: Column(
-                children: [
-                  TextField(
-                    controller: titleController,
-                    decoration: InputDecoration(hintText: postType+" Title"),
-                  ),
-                  TextField(
-                    decoration:
-                    InputDecoration(hintText: postType+" Description"),
-                    controller: descriptionController,
-                  ),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              MaterialButton(
-                color: kPrimaryColor,
-                onPressed: () {
-                  Post post = Post(postType[0], titleController.text.toString(),
-                      descriptionController.text.toString(), [1]);
-
-                  Navigator.of(context).pop(post);
-                },
-                elevation: 5.0,
-                child: Text(
-                  'Add',
-                  style: TextStyle(color: Colors.white),
-                ),
-              )
-            ],
-          );
-        });
   }
 
 
